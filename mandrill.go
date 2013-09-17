@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
+	"log"
 )
 
 var baseURL string = "https://mandrillapp.com/api/"
@@ -32,6 +33,7 @@ func NewCall() *MandrillCall {
 func (m *MandrillCall) Send() (*http.Response, error) {
 	m.Args["key"] = APIkey
 	args, _ := json.Marshal(m.Args)
+	log.Print(string(args))
 	url := baseURL + "/" + m.Version + "/" + m.Category + "/" + m.Method + "." + m.Format
 	client := &http.Client{}
 	r, _ := http.NewRequest("POST", url, bytes.NewReader(args))
