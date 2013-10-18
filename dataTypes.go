@@ -22,16 +22,16 @@ type Message struct {
 	SigningDomain           string              `json:"signing_domain,omitempty"`
 	ReturnPathDomain        string              `json:"return_path_domain,omitempty"`
 	Merge                   bool                `json:"merge,omitempty"`
-	GlobalMergeVars         []GlobalVar         `json:"global_merge_vars,omitempty"`
-	MergeVars               []MergeVars         `json:"merge_vars,omitempty"`
+	GlobalMergeVars         []*GlobalVar         `json:"global_merge_vars,omitempty"`
+	MergeVars               []*MergeVars         `json:"merge_vars,omitempty"`
 	Tags                    []string            `json:"tags,omitempty"`
 	Subaccount              string              `json:"subaccount,omitempty"`
 	GoogleAnalyticsDomains  []string            `json:"google_analytics_domains,omitempty"`
 	GoogleAnalyticsCampaign []string            `json:"google_analytics_campaign,omitempty"`
 	Metadata                []map[string]string `json:"metadata,omitempty"`
-	RecipientMetadata       []RecipientMetaData `json:"recipient_metadata,omitempty"`
-	Attachments             []Attachment        `json:"attachments,omitempty"`
-	Images                  []Image             `json:"images,omitempty"`
+	RecipientMetadata       []*RecipientMetaData `json:"recipient_metadata,omitempty"`
+	Attachments             []*Attachment        `json:"attachments,omitempty"`
+	Images                  []*Image             `json:"images,omitempty"`
 }
 
 type To struct {
