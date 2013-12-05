@@ -3,8 +3,8 @@ package mandrill
 import (
 	"bytes"
 	"encoding/json"
-	"net/http"
 	"log"
+	"net/http"
 )
 
 var baseURL string = "https://mandrillapp.com/api/"
@@ -30,13 +30,34 @@ func NewCall() *MandrillCall {
 	}
 }
 
-func (m *MandrillCall) Send() (*http.Response, error) {
+type response struct {
+	Email         string `json:"email"`
+	Status        string `json:"status"`
+	Reject_reason string `json:"reject_reason"`
+	ID            string `json:"_id"`
+}
+
+type mError struct {
+	Status  string `json:"status"`
+	Code    string `json:"code"`
+	Name    string `json:"name"`
+	Message string `json:"message"`
+}
+
+func (m *MandrillCall) Send() (mResp []*response, mErr *mError) {
 	m.Args["key"] = APIkey
 	args, _ := json.Marshal(m.Args)
 	log.Print(string(args))
 	url := baseURL + "/" + m.Version + "/" + m.Category + "/" + m.Method + "." + m.Format
 	client := &http.Client{}
 	r, _ := http.NewRequest("POST", url, bytes.NewReader(args))
-	resp, err := client.Do(r)
-	return resp, err
+	resp, _ := client.Do(r)
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(resp.Body)
+	if resp.StatusCode >= 400 {
+		json.Unmarshal(buf.Bytes(), &mErr)
+	} else {
+		json.Unmarshal(buf.Bytes(), &mResp)
+	}
+	return mResp, mErr
 }
